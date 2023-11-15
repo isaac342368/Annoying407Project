@@ -1,0 +1,30 @@
+QUESTION 1 :
+
+
+
+open the csv files in excel. highlight the two column you want to create a plot from.Include them in the pdf.
+
+
+Question 2 :
+
+smooth the data:
+
+In my code, this is achieved using a rolling average (also known as a moving average), which smooths out short-term fluctuations and highlights longer-term trends or cycles.
+data['accel_z_smooth'] = data['accel_z'].rolling(window=5).mean()
+The window size determines how much smoothing is applied. A larger window will result in a smoother signal.
+
+Thresholding:
+
+This step involves setting a threshold for the smoothed data to identify significant peaks that correspond to steps. A peak represents a foot's impact with the ground during a step.
+The threshold is a value above the noise level but below the smallest step peak you want to detect. It's important because it helps to ignore minor variations in the data that are not related to actual steps.
+threshold = 0.8 (in your code, but might need adjustment)
+Peak Detection:
+
+Using the find_peaks method from the scipy.signal module, the code identifies all local maxima that are higher than the threshold value.
+Peaks are detected in the smoothed accel_z data, which corresponds to the vertical movement typically associated with steps.
+peaks, _ = find_peaks(data['accel_z_smooth'], height=threshold)
+
+Counting Steps:
+
+After identifying the peaks, the code simply counts them as each peak is assumed to represent a step.
+number_of_steps = len(peaks)
